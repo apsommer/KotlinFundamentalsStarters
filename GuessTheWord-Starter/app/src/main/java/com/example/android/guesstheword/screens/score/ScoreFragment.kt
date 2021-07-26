@@ -50,6 +50,12 @@ class ScoreFragment : Fragment() {
                 false
         )
 
+
+        /**
+         * Note: In this app, it's not necessary to add a ViewModelFactory for the ScoreViewModel,
+         * because you can assign the score directly to the viewModel.score variable. But sometimes
+         * you need the data right when the viewModel is initialized.
+         */
         // create viewmodel factory using passed argument
         viewModelFactory = ScoreViewModelFactory(ScoreFragmentArgs.fromBundle(requireArguments()).score)
 
