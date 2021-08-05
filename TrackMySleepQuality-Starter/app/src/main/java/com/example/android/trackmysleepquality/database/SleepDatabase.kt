@@ -15,3 +15,47 @@
  */
 
 package com.example.android.trackmysleepquality.database
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+
+@Database(entities = [SleepNight::class], version = 1, exportSchema = false)
+abstract class SleepDatabase : RoomDatabase() {
+
+    // connection to dao
+    abstract val sleepDatabaseDao: SleepDatabaseDao
+
+    // static members
+    companion object {
+
+        @Volatile // do not cache value, changes are accessible to all threads immediately
+        private var INSTANCE: SleepDatabase? = null
+
+        fun getInstance(context: Context): SleepDatabase {
+
+            // only one thread at a time can enter synchronized block
+            synchronized(this) {
+
+                // smart cast local variable
+                var instance = INSTANCE
+
+                if (instance == null) {
+                    instance = Room
+                            .databaseBuilder(
+                                    context.applicationContext,
+                                    SleepDatabase::class.java,
+                                    "sleep_history_database")
+
+                            // normally define a migration conversion protocol, neglect for this sample app
+                            .fallbackToDestructiveMigration()
+                            .build()
+
+                        INSTANCE = instance
+                }
+                return instance
+            }
+        }
+    }
+}
